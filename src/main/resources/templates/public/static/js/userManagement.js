@@ -332,18 +332,18 @@ $(function(){
 		},500)
 		$('.changeBody').css('display','block');
 		$('.changeBody').addClass('animated slideInRight');
-		$('#edit_ID').val(dataArr[0].ID);
-		$('#edit_LoginName').val(dataArr[0].LoginName);
-		$('#edit_Name').val(dataArr[0].Name);
-		$('#edit_Tel').val(dataArr[0].Tel);
-		$('#edit_Email').val(dataArr[0].Email);
-		if(dataArr[0].Attribute==1){
+		$('#edit_ID').val(dataArr[0].id);
+		$('#edit_LoginName').val(dataArr[0].loginName);
+		$('#edit_Name').val(dataArr[0].name);
+		$('#edit_Tel').val(dataArr[0].phone);
+		$('#edit_Email').val(dataArr[0].email);
+		if(dataArr[0].attribute==1){
 			$("#editForm input[name=Attribute]:eq(0)").prop("checked",true);
-			$("#editForm input[name=Attribute]:eq(1)").prop("checked",false);
+			$("#editForm input[name=attribute]:eq(1)").prop("checked",false);
 		}
-		else if(dataArr[0].Attribute==2){
+		else if(dataArr[0].attribute==2){
 			$("#editForm input[name=Attribute]:eq(1)").prop("checked",true);
-			$("#editForm input[name=Attribute]:eq(0)").prop("checked",false);
+			$("#editForm input[name=attribute]:eq(0)").prop("checked",false);
 		}
 		//先清空角色复选框
 	    $('#editForm .edit input').prop('checked',false);
