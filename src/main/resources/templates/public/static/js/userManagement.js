@@ -9,66 +9,70 @@ $(function(){
     $('#mytab').bootstrapTable({
     	method: 'get',
     	contentType: "application/x-www-form-urlencoded",
-    	url:"http://localhost:8080/api/page",
+    	url:"http://localhost:8080/user",
+    	cache:false,//设置为 false 禁用 AJAX 数据缓存， 默认为true
+    	striped: true,//表格显示条纹，默认为false
     	height:tableHeight(),//高度调整
     	toolbar: '#toolbar',
     	striped: true, //是否显示行间隔色
-    	dataField: "res",
+    	dataField: "list",
     	pageNumber: 1, //初始化加载第一页，默认第一页
     	pagination:true,//是否分页
     	queryParamsType:'limit',
     	queryParams:queryParams,
     	sidePagination:'server',
-    	pageSize:10,//单页记录数
-    	pageList:[5,10,20,30],//分页步进值
+    	pageSize:5,//单页记录数
+    	pageList:[5,10,20,30],//分页步进值 , 设置页面可以显示的数据条数
     	showRefresh:true,//刷新按钮
     	showColumns:true,
     	clickToSelect: true,//是否启用点击选中行
     	toolbarAlign:'right',
     	buttonsAlign:'right',//按钮对齐方式
     	toolbar:'#toolbar',//指定工作栏
+//    	sortName: 'id', // 要排序的字段
+//        sortOrder: 'desc', // 排序规则
     	columns:[
         	{
         		title:'全选',
         		field:'select',
-        		checkbox:true,
+        		checkbox:true,// 显示一个勾选框
         		width:25,
-        		align:'center',
+        		align:'center',//显示居中
         		valign:'middle'
         	},
         	{
         		title:'ID',
-        		field:'ID',
+        		field:'id',
         		visible:false
         	},
         	{
         		title:'登录名',
-        		field:'LoginName',
+        		field:'loginName',// 返回json数据中的LoginName
         		sortable:true
         	},
         	{
         		title:'姓名',
-        		field:'Name',
-        		sortable:true
+        		field:'name',// 返回json数据中的Name
+        		sortable:true//支持排序
         	},
         	{
         		title:'手机号',
-        		field:'Tel',
+        		field:'phone',
         	},
         	{
         		title:'邮箱',
-        		field:'Email'
+        		field:'email'
         	},
         	{
         		title:'注册日期',
-        		field:'CreateTime',
+        		field:'registDate',
         		sortable:true
         	},
         	{
         		title:'状态',
-        		field:'Attribute',
+        		field:'attribute',
         		align:'center',
-        		formatter:operateFormatter
+        		formatter:operateFormatter  // 单元格格式化函数
         	}
     	],
     	locale:'zh-CN',//中文支持,
@@ -78,7 +82,7 @@ $(function(){
      */
     //请求后台数据获取角色列表
     var roleArr=[];
-    $.get('http://localhost:8080/api/page?pageNo=1&pageSize=3',function(data){
+    $.get('http://localhost:8080/user?pageNo=1&pageSize=3',function(data){
 	  if(data.list.length>0){
 		  for(var i=0;i<data.list.length;i++){
 			  var obj=new Object();
@@ -268,9 +272,9 @@ $(function(){
    });
    function operateFormatter(value,row,index){
     	if(value==2){
-    		return '<i class="fa fa-lock" style="color:red"></i>'
+    		return '锁定'
     	}else if(value==1){
-    		return '<i class="fa fa-unlock" style="color:green"></i>'
+    		return '正常'
     	}else{
     		return '数据错误'
     	}
@@ -287,7 +291,7 @@ $(function(){
     }
     //查询按钮事件
     $('#search_btn').click(function(){
-    	$('#mytab').bootstrapTable('refresh', {url: '../index.php/admin/index/userManagement'});
+    	$('#mytab').bootstrapTable('refresh', {url: 'http://localhost:8080/user'});
     })
     
     //增加按钮事件
@@ -433,7 +437,7 @@ $(function(){
 						},500)
 				    	$('.tableBody').css('display','block').addClass('animated slideInRight'); 
 				    	//刷新人员管理主页
-				    	$('#mytab').bootstrapTable('refresh', {url: '../index.php/admin/index/userManagement'});
+				    	$('#mytab').bootstrapTable('refresh', {url: 'http://localhost:8080/user'});
 				    	//修改页面表单重置
 				    	$('#editForm').data('bootstrapValidator').resetForm(true);
 					}else{
@@ -462,7 +466,7 @@ $(function(){
 					$('.popup_de .btn_submit').one('click',function(){
 						$('.popup_de').removeClass('bbox');
 					})
-        			$('#mytab').bootstrapTable('refresh', {url: '../index.php/admin/index/userManagement'});
+        			$('#mytab').bootstrapTable('refresh', {url: 'http://localhost:8080/user'});
         		}else{
         		}
         	});
