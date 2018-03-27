@@ -338,11 +338,11 @@ $(function(){
 		$('#edit_Tel').val(dataArr[0].phone);
 		$('#edit_Email').val(dataArr[0].email);
 		if(dataArr[0].attribute==1){
-			$("#editForm input[name=Attribute]:eq(0)").prop("checked",true);
+			$("#editForm input[name=attribute]:eq(0)").prop("checked",true);
 			$("#editForm input[name=attribute]:eq(1)").prop("checked",false);
 		}
 		else if(dataArr[0].attribute==2){
-			$("#editForm input[name=Attribute]:eq(1)").prop("checked",true);
+			$("#editForm input[name=attribute]:eq(1)").prop("checked",true);
 			$("#editForm input[name=attribute]:eq(0)").prop("checked",false);
 		}
 		//先清空角色复选框
@@ -423,10 +423,10 @@ $(function(){
     $('#edit_saveBtn').click(function(){
     	$('#editForm').bootstrapValidator('validate');
     	if($("#editForm").data('bootstrapValidator').isValid()){
-    		 $.post("../index.php/admin/index/updateUserById",
+    		/* $.post("http://localhost:8080/userUpdate/",
 				$('#editForm').serialize(),
 				function(data){
-					if(data.suc==true){
+					if(data.suc=='success'){
 						//隐藏修改与删除按钮
 						$('#btn_delete').css('display','none');
 						$('#btn_edit').css('display','none');
@@ -443,7 +443,45 @@ $(function(){
 					}else{
 					}
 			    }
-    		 ) 
+    		 ) */
+    		
+    		var submitData = decodeURIComponent($('#editForm').serialize(),true);
+    		$.ajax({
+    		    url:'http://localhost:8080/userUpdate/',
+    		    type:"post",
+    		    dataType: "json",
+    		    data:submitData,
+    		    cache:false,//false是不缓存，true为缓存
+    		    async:true,//true为异步，false为同步
+    		    beforeSend:function(){
+    		        //请求前
+    		    },
+    		    success:function(data){
+    		        //请求成功时
+    		    	if(data.suc=='success'){
+						//隐藏修改与删除按钮
+						$('#btn_delete').css('display','none');
+						$('#btn_edit').css('display','none');
+						//回退到人员管理主页
+						$('.changeBody').addClass('animated slideOutLeft');
+				    	setTimeout(function(){
+							$('.changeBody').removeClass('animated slideOutLeft').css('display','none');
+						},500)
+				    	$('.tableBody').css('display','block').addClass('animated slideInRight'); 
+				    	//刷新人员管理主页
+				    	$('#mytab').bootstrapTable('refresh', {url: 'http://localhost:8080/user'});
+				    	//修改页面表单重置
+				    	$('#editForm').data('bootstrapValidator').resetForm(true);
+					}else{
+					}
+    		    },
+    		    complete:function(){
+    		        //请求结束时
+    		    },
+//    		    error:function(){
+//    		        alert("服务异常！");
+//    		    }
+    		})
     	}
     })
     //删除事件按钮
@@ -454,12 +492,12 @@ $(function(){
     	$('.popup_de .btn_submit').one('click',function(){
     		var ID=[];
         	for(var i=0;i<dataArr.length;i++){
-        		ID[i]=dataArr[i].ID;
+        		ID[i]=dataArr[i].id;
         	}
-        	$.post("../index.php/admin/index/deleteUserById",
-        			{ID:ID},
+        	$.post("http://localhost:8080/userDelete",
+        			{id:ID},
         			function(data){
-        		if(data.suc==true){
+        		if(data.suc=="success"){
         			$('.popup_de .show_msg').text('删除成功！');
 					$('.popup_de .btn_cancel').css('display','none');
 					$('.popup_de').addClass('bbox');
@@ -468,6 +506,12 @@ $(function(){
 					})
         			$('#mytab').bootstrapTable('refresh', {url: 'http://localhost:8080/user'});
         		}else{
+        			$('.popup_de .show_msg').text('此条记录不存在，请刷新后重试！');
+        			$('.popup_de .btn_cancel').css('display','none');
+					$('.popup_de').addClass('bbox');
+					$('.popup_de .btn_submit').one('click',function(){
+						$('.popup_de').removeClass('bbox');
+					})
         		}
         	});
     	})

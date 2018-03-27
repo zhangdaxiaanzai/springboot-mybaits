@@ -26,4 +26,25 @@ public class UserRestController {
 		PageInfo<User> pageInfo = new PageInfo<User>(page);
 		return pageInfo;
 	}
+	
+	@RequestMapping(value="/userDelete",method=RequestMethod.POST)
+	public String deleteUser(@Param(value="id[]") int[] id){
+		int i = userService.deleteUserById(id);
+		if(i==1){
+			return "success";
+		}else {
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/userUpdate",method=RequestMethod.POST)
+	public String updateUser(@Param(value="user") User user){
+		int i = userService.updateUserByObject(user);
+		if(i==1){
+			return "success";
+		}else {
+			return null;
+		}
+	}
+	
 }
